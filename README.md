@@ -1,5 +1,8 @@
 # ArrowOS
 
+![ArrowOS](https://img.shields.io/badge/status-active-success.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+
 A web-based operating system interface with a modern desktop environment, featuring a browser, games, apps, settings, and terminal window system.
 
 ## Features
