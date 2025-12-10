@@ -12,11 +12,10 @@
   const statusEl = document.getElementById('browser-status');
   const openExternalBtn = document.getElementById('browser-open-external');
 
-  const history = [];
-  let index = -1;
-  let pendingURL = null;
-  let loadTimer = null;
+  // Track active tab
+  let activeTab = null;
 
+  // Basic allowlist of TLDs
   const TLDs = ['com','org','net','io','app','dev','edu','gov','co','us','uk','gg','xyz','site','tech','ai'];
 
   function isLikelyURL(input) {
@@ -40,48 +39,27 @@
   function navigate(input) {
     const url = normalizeURL(input);
     if (!url) { showStatus(); return; }
-    pendingURL = url;
     hideStatus();
-
-    if (index < history.length - 1) history.splice(index + 1);
-    history.push(url);
-    index = history.length - 1;
-
     urlInput.value = url;
     iframe.src = url;
-
-    clearTimeout(loadTimer);
-    loadTimer = setTimeout(() => {
-      if (pendingURL === url) showStatus();
-    }, 2500);
-    updateNavButtons();
-  }
-
-  function updateNavButtons() {
-    backBtn.disabled = index <= 0;
-    forwardBtn.disabled = index >= history.length - 1;
+    if (activeTab) {
+      activeTab.dataset.url = url;
+      activeTab.querySelector('span').textContent = url;
+    }
   }
 
   function showStatus() { statusEl.classList.remove('hidden'); }
   function hideStatus() { statusEl.classList.add('hidden'); }
 
-  iframe.addEventListener('load', () => {
-    pendingURL = null;
-    clearTimeout(loadTimer);
-    hideStatus();
-  });
+  iframe.addEventListener('load', () => { hideStatus(); });
 
   // Toolbar events
   urlInput.addEventListener('keydown', e => { if (e.key === 'Enter') navigate(urlInput.value); });
-  backBtn.addEventListener('click', () => {
-    if (index > 0) { index--; urlInput.value = history[index]; iframe.src = history[index]; updateNavButtons(); }
-  });
-  forwardBtn.addEventListener('click', () => {
-    if (index < history.length - 1) { index++; urlInput.value = history[index]; iframe.src = history[index]; updateNavButtons(); }
-  });
-  reloadBtn.addEventListener('click', () => { if (index >= 0) iframe.src = history[index]; });
+  backBtn.addEventListener('click', () => { iframe.contentWindow.history.back(); });
+  forwardBtn.addEventListener('click', () => { iframe.contentWindow.history.forward(); });
+  reloadBtn.addEventListener('click', () => { iframe.src = iframe.src; });
 
-  // Tabs (add + close)
+  // Tabs logic
   tabsEl.addEventListener('click', e => {
     const addBtn = e.target.closest('.tab-add');
     const tabEl = e.target.closest('.tab');
@@ -92,10 +70,9 @@
       newTab.className = 'tab';
       newTab.innerHTML = '<i class="fa-regular fa-file"></i><span>New Tab</span><button class="tab-close"><i class="fa-solid fa-xmark"></i></button>';
       tabsEl.insertBefore(newTab, addBtn);
-      tabsEl.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      newTab.classList.add('active');
-      history.length = 0; index = -1; updateNavButtons();
-      urlInput.value = ''; iframe.src = 'about:blank';
+      setActiveTab(newTab);
+      urlInput.value = '';
+      iframe.src = 'about:blank';
       return;
     }
 
@@ -105,25 +82,41 @@
       if (isActive) {
         const remaining = tabsEl.querySelector('.tab');
         if (remaining) {
-          remaining.classList.add('active');
-          urlInput.value = ''; iframe.src = 'about:blank';
+          setActiveTab(remaining);
+          urlInput.value = remaining.dataset.url || '';
+          iframe.src = remaining.dataset.url || 'about:blank';
+        } else {
+          activeTab = null;
+          urlInput.value = '';
+          iframe.src = 'about:blank';
         }
       }
       return;
     }
 
     if (tabEl && !closeBtn) {
-      tabsEl.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tabEl.classList.add('active');
+      setActiveTab(tabEl);
+      urlInput.value = tabEl.dataset.url || '';
+      iframe.src = tabEl.dataset.url || 'about:blank';
     }
   });
+
+  function setActiveTab(tabEl) {
+    tabsEl.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tabEl.classList.add('active');
+    activeTab = tabEl;
+  }
 
   openExternalBtn.addEventListener('click', () => {
     const current = urlInput.value.trim();
     if (current) window.open(current, '_blank', 'noopener,noreferrer');
   });
 
-  // Default home
-  urlInput.value = 'https://example.com';
-  navigate(urlInput.value);
+  // Initialize with one tab
+  const firstTab = tabsEl.querySelector('.tab');
+  if (firstTab) {
+    setActiveTab(firstTab);
+    urlInput.value = 'https://example.com';
+    navigate(urlInput.value);
+  }
 })();
