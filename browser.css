@@ -1,45 +1,90 @@
-.browser { display: flex; flex-direction: column; height: 100%; }
+.browser {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 
+/* Tabs strip */
 .tabs {
-  display: flex; align-items: center; gap: 6px; padding: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 .tab, .tab-add {
-  display: flex; align-items: center; gap: 6px;
-  padding: 6px 10px; border-radius: 10px;
-  color: var(--muted); background: rgba(255,255,255,0.04);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.04);
+  color: var(--muted);
   cursor: pointer;
 }
-.tab.active { color: var(--text); background: rgba(255,255,255,0.08); }
-.tab:hover, .tab-add:hover { color: var(--text); background: rgba(255,255,255,0.1); }
-
-.tab-close {
-  background: transparent; border: 0; color: var(--muted);
-  cursor: pointer; margin-left: 4px;
+.tab.active {
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
 }
-.tab-close:hover { color: var(--text); }
+.tab:hover, .tab-add:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--text);
+}
 
+/* Close button inside tab */
+.tab-close {
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  cursor: pointer;
+  margin-left: auto;
+}
+.tab-close:hover {
+  color: var(--text);
+}
+
+/* Toolbar */
 .toolbar {
-  display: flex; align-items: center; gap: 8px; padding: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
 }
 .toolbar .btn {
-  width: 34px; height: 34px; border-radius: 10px;
-  border: 0; background: rgba(255,255,255,0.06); color: var(--text);
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 0;
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
   cursor: pointer;
 }
-.toolbar .btn:hover { background: rgba(255,255,255,0.1); }
+.toolbar .btn:hover {
+  background: rgba(255,255,255,0.1);
+}
 
+/* URL bar */
 .urlbar {
-  flex: 1; display: flex; align-items: center; gap: 8px;
-  padding: 6px 10px; border-radius: 12px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.06);
 }
 .urlbar input {
-  flex: 1; background: transparent; border: 0;
-  color: var(--text); outline: none;
+  flex: 1;
+  background: transparent;
+  border: 0;
+  color: var(--text);
+  outline: none;
 }
 
+/* Browser view */
 .browser-view {
-  flex: 1; width: 100%; border: 0;
+  flex: 1;
+  width: 100%;
+  border: 0;
   background: rgba(0,0,0,0.2);
 }
