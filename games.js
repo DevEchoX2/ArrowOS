@@ -1,23 +1,60 @@
+/* ArrowOS Games */
 (() => {
   const root = document.getElementById('games-grid');
   if (!root) return;
 
+  // Define your games here
   const games = [
-    { id: 'neon-run', title: 'Neon Run', thumb: 'img/neon-run.jpg', url: 'games/neon-run.html' },
-    { id: 'pixel-arena', title: 'Pixel Arena', thumb: 'img/pixel-arena.jpg', url: 'games/pixel-arena.html' },
-    { id: 'orbit', title: 'Orbit', thumb: 'img/orbit.jpg', url: 'games/orbit.html' }
+    {
+      id: 'super-racing',
+      title: 'Super Duper Epic Racing Simulator',
+      thumb: 'img/games/super-racing.png',
+      url: 'games/super-racing.html'
+    },
+    {
+      id: 'blocky-plane',
+      title: 'Blocky Plane Adventure',
+      thumb: 'img/games/blocky-plane.png',
+      url: 'games/blocky-plane.html'
+    },
+    {
+      id: 'grand-extreme',
+      title: 'Grand Extreme Racing',
+      thumb: 'img/games/grand-extreme.png',
+      url: 'games/grand-extreme.html'
+    },
+    {
+      id: 'highway-traffic',
+      title: 'Highway Traffic Racer',
+      thumb: 'img/games/highway-traffic.png',
+      url: 'games/highway-traffic.html'
+    },
+    {
+      id: 'cookie-clicker',
+      title: 'Cookie Clicker',
+      thumb: 'img/games/cookie.png',
+      url: 'games/cookie.html'
+    },
+    {
+      id: 'snow-rider',
+      title: 'Snow Rider 3D',
+      thumb: 'img/games/snow-rider.png',
+      url: 'games/snow-rider.html'
+    }
   ];
 
+  // Render game cards
   root.innerHTML = games.map(g => `
     <div class="game-card" data-url="${g.url}" data-title="${g.title}">
       <img class="game-thumb" src="${g.thumb}" alt="${g.title}" />
       <div class="game-info">
-        <div class="game-title">${g.title}</div>
+        <span class="game-title">${g.title}</span>
         <button class="game-launch"><i class="fa-solid fa-play"></i></button>
       </div>
     </div>
   `).join('');
 
+  // Click handler
   root.addEventListener('click', e => {
     const card = e.target.closest('.game-card');
     if (!card) return;
@@ -31,5 +68,9 @@
     iframeView.src = url;
     iframeTitle.textContent = title;
     iframeWin.classList.remove('window-hidden');
+
+    // Bring iframe window to front
+    const event = new CustomEvent('arrowos:open', { detail: { name: 'iframe' } });
+    window.dispatchEvent(event);
   });
 })();
