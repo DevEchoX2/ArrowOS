@@ -1,4 +1,4 @@
-/* ArrowOS real browser */
+/* ArrowOS Browser */
 (() => {
   const win = document.getElementById('window-browser');
   if (!win) return;
@@ -8,7 +8,6 @@
   const backBtn = win.querySelector('.nav-back');
   const forwardBtn = win.querySelector('.nav-forward');
   const reloadBtn = win.querySelector('.nav-reload');
-  const closeBtn = win.querySelector('.nav-close'); // NEW close button
   const tabsEl = win.querySelector('.tabs');
   const statusEl = document.getElementById('browser-status');
   const openExternalBtn = document.getElementById('browser-open-external');
@@ -18,17 +17,13 @@
   let pendingURL = null;
   let loadTimer = null;
 
-  // Basic allowlist of TLDs to help heuristic detection of URLs
+  // Basic allowlist of TLDs
   const TLDs = ['com','org','net','io','app','dev','edu','gov','co','us','uk','gg','xyz','site','tech','ai'];
 
   function isLikelyURL(input) {
-    try {
-      new URL(input);
-      return true;
-    } catch {}
+    try { new URL(input); return true; } catch {}
     const low = input.trim().toLowerCase();
-    const parts = low.split('/');
-    const host = parts[0].split('?')[0];
+    const host = low.split('/')[0].split('?')[0];
     const hasDot = host.includes('.');
     const endsTLD = TLDs.some(t => host.endsWith('.' + t) || host.endsWith(t));
     return hasDot && endsTLD;
@@ -38,22 +33,14 @@
     let raw = input.trim();
     if (!raw) return null;
     if (/^javascript:/i.test(raw)) return null;
-    if (isLikelyURL(raw) && !/^https?:\/\//i.test(raw)) {
-      raw = 'https://' + raw;
-    }
-    if (!isLikelyURL(raw)) {
-      const q = encodeURIComponent(raw);
-      raw = `https://duckduckgo.com/?q=${q}`;
-    }
+    if (isLikelyURL(raw) && !/^https?:\/\//i.test(raw)) raw = 'https://' + raw;
+    if (!isLikelyURL(raw)) raw = `https://duckduckgo.com/?q=${encodeURIComponent(raw)}`;
     return raw;
   }
 
   function navigate(input) {
     const url = normalizeURL(input);
-    if (!url) {
-      showStatus(`Invalid or blocked address.`);
-      return;
-    }
+    if (!url) { showStatus(); return; }
     pendingURL = url;
     hideStatus();
 
@@ -66,9 +53,7 @@
 
     clearTimeout(loadTimer);
     loadTimer = setTimeout(() => {
-      if (pendingURL === url) {
-        showStatus('This site can’t be embedded here.');
-      }
+      if (pendingURL === url) showStatus();
     }, 2500);
     updateNavButtons();
   }
@@ -78,14 +63,9 @@
     forwardBtn.disabled = index >= history.length - 1;
   }
 
-  function showStatus(msg) {
-    statusEl.classList.remove('hidden');
-  }
-  function hideStatus() {
-    statusEl.classList.add('hidden');
-  }
+  function showStatus() { statusEl.classList.remove('hidden'); }
+  function hideStatus() { statusEl.classList.add('hidden'); }
 
-  // Iframe events
   iframe.addEventListener('load', () => {
     pendingURL = null;
     clearTimeout(loadTimer);
@@ -93,59 +73,52 @@
   });
 
   // Toolbar events
-  urlInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      navigate(urlInput.value);
-    }
-  });
+  urlInput.addEventListener('keydown', e => { if (e.key === 'Enter') navigate(urlInput.value); });
   backBtn.addEventListener('click', () => {
-    if (index > 0) {
-      index--;
-      urlInput.value = history[index];
-      iframe.src = history[index];
-      updateNavButtons();
-    }
+    if (index > 0) { index--; urlInput.value = history[index]; iframe.src = history[index]; updateNavButtons(); }
   });
   forwardBtn.addEventListener('click', () => {
-    if (index < history.length - 1) {
-      index++;
-      urlInput.value = history[index];
-      iframe.src = history[index];
-      updateNavButtons();
-    }
+    if (index < history.length - 1) { index++; urlInput.value = history[index]; iframe.src = history[index]; updateNavButtons(); }
   });
-  reloadBtn.addEventListener('click', () => {
-    if (index >= 0) {
-      iframe.src = history[index];
-    }
-  });
+  reloadBtn.addEventListener('click', () => { if (index >= 0) iframe.src = history[index]; });
 
-  // Close button
-  closeBtn.addEventListener('click', () => {
-    win.classList.add('window-hidden');
-  });
+  // Tabs (add + close)
+  tabsEl.addEventListener('click', e => {
+    const addBtn = e.target.closest('.tab-add');
+    const tabEl = e.target.closest('.tab');
+    const closeBtn = e.target.closest('.tab-close');
 
-  // Tabs (simple visual; single iframe instance)
-  tabsEl.addEventListener('click', (e) => {
-    const el = e.target.closest('.tab, .tab-add');
-    if (!el) return;
-    if (el.classList.contains('tab-add')) {
+    if (addBtn) {
       const newTab = document.createElement('div');
       newTab.className = 'tab';
-      newTab.innerHTML = '<i class="fa-regular fa-file"></i><span>New Tab</span>';
-      tabsEl.insertBefore(newTab, tabsEl.querySelector('.tab-add'));
+      newTab.innerHTML = '<i class="fa-regular fa-file"></i><span>New Tab</span><button class="tab-close"><i class="fa-solid fa-xmark"></i></button>';
+      tabsEl.insertBefore(newTab, addBtn);
       tabsEl.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       newTab.classList.add('active');
       history.length = 0; index = -1; updateNavButtons();
-      urlInput.value = '';
-      iframe.src = 'about:blank';
-    } else {
+      urlInput.value = ''; iframe.src = 'about:blank';
+      return;
+    }
+
+    if (closeBtn && tabEl) {
+      const isActive = tabEl.classList.contains('active');
+      tabEl.remove();
+      if (isActive) {
+        const remaining = tabsEl.querySelector('.tab');
+        if (remaining) {
+          remaining.classList.add('active');
+          urlInput.value = ''; iframe.src = 'about:blank';
+        }
+      }
+      return;
+    }
+
+    if (tabEl && !closeBtn) {
       tabsEl.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      el.classList.add('active');
+      tabEl.classList.add('active');
     }
   });
 
-  // Open externally when blocked
   openExternalBtn.addEventListener('click', () => {
     const current = urlInput.value.trim();
     if (current) window.open(current, '_blank', 'noopener,noreferrer');
