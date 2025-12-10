@@ -2,24 +2,27 @@
 .games #games-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* 2 cards per row */
-  grid-auto-rows: minmax(180px, auto);   /* row height */
   gap: 16px;
   padding: 16px;
   overflow-y: auto;   /* vertical scroll */
-  max-height: calc(100% - 32px);
+  max-height: calc(100% - 32px); /* keep inside window */
 }
 
 /* Game card styling */
 .game-card {
-  border-radius: 16px;
-  overflow: hidden;
+  border-radius: 12px;
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.1);
   box-shadow: var(--shadow);
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
 }
 
 .game-thumb {
@@ -30,12 +33,6 @@
 
 .game-info {
   padding: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  text-align: center;
   color: var(--text);
-}
-
-.game-title {
-  font-size: 14px;
 }
