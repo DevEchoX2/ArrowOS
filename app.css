@@ -8,7 +8,7 @@
   max-height: calc(100% - 32px);
 }
 
-/* App card styling */
+/* App card styling (boxed like games) */
 .app-card {
   border-radius: 12px;
   background: rgba(255,255,255,0.05);
@@ -17,9 +17,9 @@
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
 }
 
 .app-card:hover {
@@ -27,15 +27,26 @@
   box-shadow: 0 6px 16px rgba(0,0,0,0.3);
 }
 
+/* App icon area */
+.app-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.08);
+  padding: 16px;
+}
+
 .app-icon img {
   width: 64px;
   height: 64px;
   object-fit: contain;
-  margin-bottom: 8px;
 }
 
+/* Title area */
 .app-title {
+  padding: 12px;
+  text-align: center;
   font-size: 14px;
   color: var(--text);
-  text-align: center;
+  background: rgba(0,0,0,0.2);
 }
