@@ -5,25 +5,38 @@
 
   // Define your apps here
   const apps = [
-    { id: 'music', title: 'Music', icon: 'img/music.png', url: 'apps/music.html' },
-    { id: 'gallery', title: 'Gallery', icon: 'img/gallery.png', url: 'apps/gallery.html' },
-    { id: 'store', title: 'Store', icon: 'img/store.png', url: 'apps/store.html' },
-    // Add more apps as needed
+    {
+      id: 'music',
+      title: 'Music',
+      icon: 'img/apps/music.png',
+      url: 'apps/music.html'
+    },
+    {
+      id: 'gallery',
+      title: 'Gallery',
+      icon: 'img/apps/gallery.png',
+      url: 'apps/gallery.html'
+    },
+    {
+      id: 'store',
+      title: 'Store',
+      icon: 'img/apps/store.png',
+      url: 'apps/store.html'
+    }
   ];
 
   // Render app cards
   root.innerHTML = apps.map(a => `
-    <div class="app-card" data-id="${a.id}" data-url="${a.url}" data-title="${a.title}">
+    <div class="app-card" data-url="${a.url}" data-title="${a.title}">
       <div class="app-icon"><img src="${a.icon}" alt="${a.title}" /></div>
       <div class="app-title">${a.title}</div>
     </div>
   `).join('');
 
-  // Click handler to launch apps in iframe window
+  // Click handler
   root.addEventListener('click', e => {
     const card = e.target.closest('.app-card');
     if (!card) return;
-
     const url = card.dataset.url;
     const title = card.dataset.title;
 
