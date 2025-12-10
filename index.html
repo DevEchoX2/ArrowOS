@@ -36,7 +36,7 @@
 
   <!-- Desktop -->
   <main id="desktop">
-    <!-- Browser -->
+        <!-- Browser -->
     <section id="window-browser" class="window window-hidden">
       <header class="window-titlebar">
         <div class="window-title"><i class="fa-solid fa-globe"></i><span>Browser</span></div>
@@ -55,9 +55,9 @@
           <button class="tab-add"><i class="fa-solid fa-plus"></i></button>
         </div>
         <div class="toolbar">
-          <button class="btn nav-back" title="Back"><i class="fa-solid fa-arrow-left"></i></button>
-          <button class="btn nav-forward" title="Forward"><i class="fa-solid fa-arrow-right"></i></button>
-          <button class="btn nav-reload" title="Reload"><i class="fa-solid fa-rotate-right"></i></button>
+          <button class="btn nav-back"><i class="fa-solid fa-arrow-left"></i></button>
+          <button class="btn nav-forward"><i class="fa-solid fa-arrow-right"></i></button>
+          <button class="btn nav-reload"><i class="fa-solid fa-rotate-right"></i></button>
           <div class="urlbar">
             <i class="fa-solid fa-lock"></i>
             <input id="browser-url" type="text" placeholder="Search or enter address" />
@@ -104,6 +104,7 @@
       </header>
       <div class="window-content apps"><div id="apps-grid"></div></div>
     </section>
+
     <!-- Settings -->
     <section id="window-settings" class="window window-hidden">
       <header class="window-titlebar">
@@ -148,12 +149,27 @@
         </div>
       </header>
       <div class="window-content">
-        <iframe id="iframe-view" src="about:blank"></iframe>
+        <iframe id="iframe-view" src="" frameborder="0" style="width:100%;height:100%;"></iframe>
       </div>
     </section>
   </main>
+    <!-- Taskbar -->
+  <nav id="taskbar">
+    <div class="taskbar-inner">
+      <button class="task-btn" data-open="browser"><span class="icon" data-icon="globe"></span></button>
+      <button class="task-btn" data-open="games"><span class="icon" data-icon="gamepad"></span></button>
+      <button class="task-btn" data-open="apps"><span class="icon" data-icon="grid"></span></button>
+      <button class="task-btn" data-open="settings"><span class="icon" data-icon="settings"></span></button>
+      <button class="task-btn" data-open="terminal"><span class="icon" data-icon="terminal"></span></button>
+      <div class="taskbar-right">
+        <button class="task-btn" id="show-desktop"><i class="fa-solid fa-layer-group"></i></button>
+        <div class="clock" id="clock"></div>
+      </div>
+    </div>
+  </nav>
 
   <!-- Scripts -->
+  <script src="icons.js"></script>
   <script src="main.js"></script>
   <script src="games.js"></script>
   <script src="app.js"></script>
