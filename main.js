@@ -1,4 +1,4 @@
-/* ArrowOS main.js — Part 1: Core Window System */
+/* ArrowOS main.js */
 (() => {
   // Helpers
   const $ = (sel) => document.querySelector(sel);
@@ -95,6 +95,7 @@
   on(showDesktop, 'click', () => {
     Object.values(windows).forEach(w => w?.classList.add('window-hidden'));
   });
+
   // --- Clock ---
   const clock = $('#clock');
   function updateClock() {
@@ -112,6 +113,7 @@
   const bgVideo = $('#bg-video');
   const bgImage = $('#bg-image');
 
+  // Load saved settings
   try {
     const savedAccent = localStorage.getItem('arrowos-accent');
     if (savedAccent) {
@@ -132,6 +134,7 @@
     }
   } catch {}
 
+  // Save settings
   on(accentPicker, 'input', e => {
     const color = e.target.value;
     document.documentElement.style.setProperty('--accent', color);
@@ -148,6 +151,7 @@
     if (bgImage) bgImage.style.display = useVideo ? 'none' : 'block';
     try { localStorage.setItem('arrowos-bg-video', String(useVideo)); } catch {}
   });
+
   // --- Terminal ---
   const termInput = $('#terminal-input');
   const termOut = $('#terminal-output');
@@ -195,13 +199,18 @@
     } catch {}
   });
 
-  // --- Boot sequence ---
+  // --- Boot sequence (defensive) ---
   function endBootAndStart() {
-    if (bootOverlay) bootOverlay.classList.add('hidden');
+    if (bootOverlay) bootOverlay.classList.add('hidden'); // ensure .hidden { display:none; }
     openWindow('apps'); // default entry
   }
+
+  // Prefer DOMContentLoaded to avoid waiting for video
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => setTimeout(endBootAndStart, 300));
+    document.addEventListener('DOMContentLoaded', () => {
+      // small delay for polish, but never block boot
+      setTimeout(endBootAndStart, 300);
+    });
   } else {
     setTimeout(endBootAndStart, 300);
   }
