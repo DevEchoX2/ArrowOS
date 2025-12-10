@@ -1,18 +1,22 @@
 /* ArrowOS main.js */
 (() => {
-  const bootOverlay = document.getElementById('boot-overlay');
+  // Helpers
+  const $ = (sel) => document.querySelector(sel);
+  const on = (el, type, fn) => el && el.addEventListener(type, fn);
+
+  const bootOverlay = $('#boot-overlay');
   const windows = {
-    browser: document.getElementById('window-browser'),
-    games: document.getElementById('window-games'),
-    apps: document.getElementById('window-apps'),
-    settings: document.getElementById('window-settings'),
-    terminal: document.getElementById('window-terminal'),
-    iframe: document.getElementById('window-iframe'), // generic iframe window
+    browser: $('#window-browser'),
+    games: $('#window-games'),
+    apps: $('#window-apps'),
+    settings: $('#window-settings'),
+    terminal: $('#window-terminal'),
+    iframe: $('#window-iframe'), // generic iframe window
   };
 
   // --- Taskbar wiring ---
   document.querySelectorAll('.task-btn[data-open]').forEach(btn => {
-    btn.addEventListener('click', () => openWindow(btn.dataset.open));
+    on(btn, 'click', () => openWindow(btn.dataset.open));
   });
 
   function openWindow(name) {
@@ -27,6 +31,7 @@
   function closeWindow(win) { win.classList.add('window-hidden'); }
   function minimizeWindow(win) { win.classList.add('window-hidden'); }
   function maximizeWindow(win) {
+    if (!win) return;
     const isMax = win.dataset.maximized === 'true';
     if (isMax) {
       win.style.top = '80px';
@@ -46,8 +51,11 @@
 
   function bringToFront(win) {
     const base = 10;
-    const maxZ = Math.max(...Array.from(document.querySelectorAll('.window'))
-      .map(w => parseInt(getComputedStyle(w).zIndex || base, 10)), base);
+    const zList = Array.from(document.querySelectorAll('.window')).map(w => {
+      const z = parseInt(getComputedStyle(w).zIndex || base, 10);
+      return Number.isNaN(z) ? base : z;
+    });
+    const maxZ = zList.length ? Math.max(...zList) : base;
     win.style.zIndex = maxZ + 1;
   }
 
@@ -57,23 +65,24 @@
     const min = w.querySelector('.win-min');
     const max = w.querySelector('.win-max');
     const close = w.querySelector('.win-close');
-    min?.addEventListener('click', () => minimizeWindow(w));
-    max?.addEventListener('click', () => maximizeWindow(w));
-    close?.addEventListener('click', () => closeWindow(w));
+    on(min, 'click', () => minimizeWindow(w));
+    on(max, 'click', () => maximizeWindow(w));
+    on(close, 'click', () => closeWindow(w));
 
     const titlebar = w.querySelector('.window-titlebar');
     let dragging = false, startX = 0, startY = 0, rect = null;
-    titlebar?.addEventListener('mousedown', (e) => {
+    on(titlebar, 'mousedown', (e) => {
       dragging = true;
       startX = e.clientX; startY = e.clientY;
       rect = w.getBoundingClientRect();
       document.body.style.userSelect = 'none';
+      bringToFront(w);
     });
-    window.addEventListener('mouseup', () => {
+    on(window, 'mouseup', () => {
       dragging = false; document.body.style.userSelect = '';
     });
-    window.addEventListener('mousemove', (e) => {
-      if (!dragging) return;
+    on(window, 'mousemove', (e) => {
+      if (!dragging || !rect) return;
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
       w.style.left = rect.left + dx + 'px';
@@ -82,67 +91,72 @@
   });
 
   // --- Show desktop ---
-  document.getElementById('show-desktop').addEventListener('click', () => {
+  const showDesktop = $('#show-desktop');
+  on(showDesktop, 'click', () => {
     Object.values(windows).forEach(w => w?.classList.add('window-hidden'));
   });
 
   // --- Clock ---
-  const clock = document.getElementById('clock');
-  const updateClock = () => {
+  const clock = $('#clock');
+  function updateClock() {
+    if (!clock) return;
     const now = new Date();
     clock.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  };
+  }
   updateClock();
   setInterval(updateClock, 1000);
 
   // --- Settings persistence ---
-  const accentPicker = document.getElementById('accent-picker');
-  const blurRange = document.getElementById('blur-range');
-  const bgVideoToggle = document.getElementById('bg-video-toggle');
-  const bgVideo = document.getElementById('bg-video');
-  const bgImage = document.getElementById('bg-image');
+  const accentPicker = $('#accent-picker');
+  const blurRange = $('#blur-range');
+  const bgVideoToggle = $('#bg-video-toggle');
+  const bgVideo = $('#bg-video');
+  const bgImage = $('#bg-image');
 
   // Load saved settings
-  const savedAccent = localStorage.getItem('arrowos-accent');
-  if (savedAccent) {
-    document.documentElement.style.setProperty('--accent', savedAccent);
-    accentPicker.value = savedAccent;
-  }
-  const savedBlur = localStorage.getItem('arrowos-blur');
-  if (savedBlur) {
-    document.documentElement.style.setProperty('--blur', savedBlur + 'px');
-    blurRange.value = savedBlur;
-  }
-  const savedBgVideo = localStorage.getItem('arrowos-bg-video');
-  if (savedBgVideo !== null) {
-    const useVideo = savedBgVideo === 'true';
-    bgVideoToggle.checked = useVideo;
-    bgVideo.style.display = useVideo ? 'block' : 'none';
-    bgImage.style.display = useVideo ? 'none' : 'block';
-  }
+  try {
+    const savedAccent = localStorage.getItem('arrowos-accent');
+    if (savedAccent) {
+      document.documentElement.style.setProperty('--accent', savedAccent);
+      if (accentPicker) accentPicker.value = savedAccent;
+    }
+    const savedBlur = localStorage.getItem('arrowos-blur');
+    if (savedBlur) {
+      document.documentElement.style.setProperty('--blur', savedBlur + 'px');
+      if (blurRange) blurRange.value = savedBlur;
+    }
+    const savedBgVideo = localStorage.getItem('arrowos-bg-video');
+    if (savedBgVideo !== null) {
+      const useVideo = savedBgVideo === 'true';
+      if (bgVideoToggle) bgVideoToggle.checked = useVideo;
+      if (bgVideo) bgVideo.style.display = useVideo ? 'block' : 'none';
+      if (bgImage) bgImage.style.display = useVideo ? 'none' : 'block';
+    }
+  } catch {}
 
   // Save settings
-  accentPicker.addEventListener('input', e => {
+  on(accentPicker, 'input', e => {
     const color = e.target.value;
     document.documentElement.style.setProperty('--accent', color);
-    localStorage.setItem('arrowos-accent', color);
+    try { localStorage.setItem('arrowos-accent', color); } catch {}
   });
-  blurRange.addEventListener('input', e => {
+  on(blurRange, 'input', e => {
     const blur = e.target.value;
     document.documentElement.style.setProperty('--blur', blur + 'px');
-    localStorage.setItem('arrowos-blur', blur);
+    try { localStorage.setItem('arrowos-blur', blur); } catch {}
   });
-  bgVideoToggle.addEventListener('change', e => {
+  on(bgVideoToggle, 'change', e => {
     const useVideo = e.target.checked;
-    bgVideo.style.display = useVideo ? 'block' : 'none';
-    bgImage.style.display = useVideo ? 'none' : 'block';
-    localStorage.setItem('arrowos-bg-video', useVideo);
+    if (bgVideo) bgVideo.style.display = useVideo ? 'block' : 'none';
+    if (bgImage) bgImage.style.display = useVideo ? 'none' : 'block';
+    try { localStorage.setItem('arrowos-bg-video', String(useVideo)); } catch {}
   });
 
   // --- Terminal ---
-  const termInput = document.getElementById('terminal-input');
-  const termOut = document.getElementById('terminal-output');
+  const termInput = $('#terminal-input');
+  const termOut = $('#terminal-output');
   function printLine(text) {
+    if (!termOut) return;
     const line = document.createElement('div');
     line.textContent = text;
     termOut.appendChild(line);
@@ -150,7 +164,7 @@
   }
   const commands = {
     help: () => printLine('commands: help, open <app>, theme <hex>, clear'),
-    clear: () => { termOut.innerHTML = ''; },
+    clear: () => { if (termOut) termOut.innerHTML = ''; },
     open: (arg) => {
       if (windows[arg]) { openWindow(arg); printLine(`opened ${arg}`); }
       else printLine(`unknown app: ${arg}`);
@@ -158,12 +172,12 @@
     theme: (hex) => {
       if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(hex)) {
         document.documentElement.style.setProperty('--accent', hex);
-        localStorage.setItem('arrowos-accent', hex);
+        try { localStorage.setItem('arrowos-accent', hex); } catch {}
         printLine(`accent set to ${hex}`);
       } else printLine('invalid hex color');
     }
   };
-  termInput.addEventListener('keydown', (e) => {
+  on(termInput, 'keydown', (e) => {
     if (e.key === 'Enter') {
       const raw = e.target.value.trim();
       if (!raw) return;
@@ -178,14 +192,26 @@
 
   // --- Icons initialization ---
   document.querySelectorAll('.icon').forEach(el => {
-    const name = el.getAttribute('data-icon');
-    const svg = window.ARROW_ICONS?.get(name);
-    if (svg) el.innerHTML = svg;
+    try {
+      const name = el.getAttribute('data-icon');
+      const svg = window.ARROW_ICONS?.get?.(name);
+      if (svg) el.innerHTML = svg;
+    } catch {}
   });
 
-  // --- Boot sequence ---
-  setTimeout(() => {
-    bootOverlay.classList.add('hidden');
+  // --- Boot sequence (defensive) ---
+  function endBootAndStart() {
+    if (bootOverlay) bootOverlay.classList.add('hidden'); // ensure .hidden { display:none; }
     openWindow('apps'); // default entry
-  }, 2600);
+  }
+
+  // Prefer DOMContentLoaded to avoid waiting for video
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      // small delay for polish, but never block boot
+      setTimeout(endBootAndStart, 300);
+    });
+  } else {
+    setTimeout(endBootAndStart, 300);
+  }
 })();
