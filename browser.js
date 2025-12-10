@@ -8,6 +8,7 @@
   const backBtn = win.querySelector('.nav-back');
   const forwardBtn = win.querySelector('.nav-forward');
   const reloadBtn = win.querySelector('.nav-reload');
+  const closeBtn = win.querySelector('.nav-close'); // NEW close button
   const tabsEl = win.querySelector('.tabs');
   const statusEl = document.getElementById('browser-status');
   const openExternalBtn = document.getElementById('browser-open-external');
@@ -22,11 +23,9 @@
 
   function isLikelyURL(input) {
     try {
-      // If user typed a full URL, this will parse
       new URL(input);
       return true;
     } catch {}
-    // Heuristic: contains a dot and a known TLD
     const low = input.trim().toLowerCase();
     const parts = low.split('/');
     const host = parts[0].split('?')[0];
@@ -38,13 +37,10 @@
   function normalizeURL(input) {
     let raw = input.trim();
     if (!raw) return null;
-    // Block dangerous schemes
     if (/^javascript:/i.test(raw)) return null;
-    // If it looks like a URL but lacks scheme, add https://
     if (isLikelyURL(raw) && !/^https?:\/\//i.test(raw)) {
       raw = 'https://' + raw;
     }
-    // If it’s not a URL, treat as a search query (DuckDuckGo)
     if (!isLikelyURL(raw)) {
       const q = encodeURIComponent(raw);
       raw = `https://duckduckgo.com/?q=${q}`;
@@ -61,7 +57,6 @@
     pendingURL = url;
     hideStatus();
 
-    // History management
     if (index < history.length - 1) history.splice(index + 1);
     history.push(url);
     index = history.length - 1;
@@ -69,10 +64,8 @@
     urlInput.value = url;
     iframe.src = url;
 
-    // If site blocks framing, we may not get a normal load event; show fallback
     clearTimeout(loadTimer);
     loadTimer = setTimeout(() => {
-      // If still pending after timeout, show overlay
       if (pendingURL === url) {
         showStatus('This site can’t be embedded here.');
       }
@@ -87,7 +80,6 @@
 
   function showStatus(msg) {
     statusEl.classList.remove('hidden');
-    // Message already in HTML; keep minimal to avoid redundancy
   }
   function hideStatus() {
     statusEl.classList.add('hidden');
@@ -95,7 +87,6 @@
 
   // Iframe events
   iframe.addEventListener('load', () => {
-    // Any load should clear pending
     pendingURL = null;
     clearTimeout(loadTimer);
     hideStatus();
@@ -129,6 +120,11 @@
     }
   });
 
+  // Close button
+  closeBtn.addEventListener('click', () => {
+    win.classList.add('window-hidden');
+  });
+
   // Tabs (simple visual; single iframe instance)
   tabsEl.addEventListener('click', (e) => {
     const el = e.target.closest('.tab, .tab-add');
@@ -140,7 +136,6 @@
       tabsEl.insertBefore(newTab, tabsEl.querySelector('.tab-add'));
       tabsEl.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       newTab.classList.add('active');
-      // Reset to blank on new tab
       history.length = 0; index = -1; updateNavButtons();
       urlInput.value = '';
       iframe.src = 'about:blank';
