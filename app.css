@@ -1,19 +1,37 @@
-.apps {
-  padding: 14px;
-}
 .apps-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 16px;
 }
+
 .app-card {
-  border-radius: 16px;
-  padding: 12px;
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
   box-shadow: var(--shadow);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   cursor: pointer;
+  transition: background 0.2s ease;
 }
-.app-icon .icon { width: 28px; height: 28px; }
-.app-title { font-weight: 600; }
+
+.app-card:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+.app-icon img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+.app-title {
+  font-weight: 600;
+  font-size: 15px;
+  text-align: center;
+  color: var(--text);
+}
