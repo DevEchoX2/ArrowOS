@@ -17,7 +17,6 @@
   let pendingURL = null;
   let loadTimer = null;
 
-  // Basic allowlist of TLDs
   const TLDs = ['com','org','net','io','app','dev','edu','gov','co','us','uk','gg','xyz','site','tech','ai'];
 
   function isLikelyURL(input) {
