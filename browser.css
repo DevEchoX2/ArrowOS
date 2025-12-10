@@ -12,7 +12,8 @@
   padding: 6px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
-.tab, .tab-add {
+.tab,
+.tab-add {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -26,7 +27,8 @@
   background: rgba(255,255,255,0.08);
   color: var(--text);
 }
-.tab:hover, .tab-add:hover {
+.tab:hover,
+.tab-add:hover {
   background: rgba(255,255,255,0.1);
   color: var(--text);
 }
@@ -81,7 +83,7 @@
   outline: none;
 }
 
-/* Browser view */
+/* Browser view (iframe) */
 .browser-view {
   flex: 1;
   width: 100%;
