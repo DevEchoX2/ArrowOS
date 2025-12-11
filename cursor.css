@@ -1,0 +1,18 @@
+
+
+body {
+  cursor: crosshair;
+}
+
+
+a, button, .btn, .task-btn {
+  cursor: crosshair;
+}
+
+input[type="text"], textarea {
+  cursor: crosshair;
+}
+
+.window-titlebar {
+  cursor: crosshair;
+}
