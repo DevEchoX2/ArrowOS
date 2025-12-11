@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Partners</title>
+  <link rel="stylesheet" href="../styles.css"> 
+  <style>
+    .partner-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .partner-card {
+      background: rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+    .partner-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+    .partner-card img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      transition: opacity 0.3s ease;
+    }
+    .partner-card:hover img {
+      opacity: 0.85;
+    }
+    .partner-title {
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--accent, #7f5af0);
+    }
+  </style>
+</head>
+<body>
+  <section class="partner-container" id="partner-container"></section>
+
+  <script>
+    
+    const partners = [
+      { img: "../partnerimg/logo1.png", title: "DuckDuckGo", link: "https://duckduckgo.it.com" },
+      { img: "../partnerimg/logo2.png", title: "Example Partner 2", link: "https://example.com" },
+      { img: "../partnerimg/logo3.png", title: "Example Partner 3", link: "https://example.com" },
+      { img: "../partnerimg/logo4.png", title: "Example Partner 4", link: "https://example.com" }
+    ];
+
+    const container = document.getElementById('partner-container');
+
+    partners.forEach(p => {
+      const card = document.createElement('a');
+      card.href = p.link;
+      card.target = "_blank";
+      card.className = "partner-card";
+      card.innerHTML = `
+        <img src="${p.img}" alt="${p.title}">
+        <div class="partner-title">${p.title}</div>
+      `;
+      container.appendChild(card);
+    });
+  </script>
+</body>
+</html>
