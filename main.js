@@ -214,4 +214,77 @@
   } else {
     setTimeout(endBootAndStart, 300);
   }
+  // === New Settings Features ===
+
+// Background upload
+const bgUpload = document.getElementById('bg-upload');
+if (bgUpload) {
+  bgUpload.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+
+    if (file.type.startsWith('image/')) {
+      document.body.style.backgroundImage = `url(${url})`;
+      document.body.style.backgroundSize = 'cover';
+      localStorage.setItem('arrowos-bg-image', url);
+    } else if (file.type.startsWith('video/')) {
+      const video = document.getElementById('bg-video');
+      if (video) {
+        video.src = url;
+        video.style.display = 'block';
+      }
+      localStorage.setItem('arrowos-bg-video-file', url);
+    }
+  });
+}
+
+// Stealth mode (about:blank)
+const stealthToggle = document.getElementById('stealth-toggle');
+if (stealthToggle) {
+  stealthToggle.addEventListener('change', e => {
+    if (e.target.checked) {
+      document.body.innerHTML = '';
+      document.title = 'about:blank';
+    } else {
+      location.reload();
+    }
+  });
+}
+
+// Favicon switcher
+const faviconSelect = document.getElementById('favicon-select');
+if (faviconSelect) {
+  // Populate dynamically (no hardcoding in HTML)
+  const favicons = ["default.ico", "blank.ico", "favicon1.ico", "favicon2.ico"];
+  favicons.forEach(f => {
+    const opt = document.createElement('option');
+    opt.value = f;
+    opt.textContent = f.replace(".ico","");
+    faviconSelect.appendChild(opt);
+  });
+
+  // Restore saved favicon
+  const savedFavicon = localStorage.getItem('arrowos-favicon');
+  if (savedFavicon) {
+    faviconSelect.value = savedFavicon;
+    applyFavicon(savedFavicon);
+  }
+
+  faviconSelect.addEventListener('change', e => {
+    const choice = e.target.value;
+    applyFavicon(choice);
+    localStorage.setItem('arrowos-favicon', choice);
+  });
+}
+
+function applyFavicon(choice) {
+  let link = document.querySelector("link[rel~='icon']");
+  if (!link) {
+    link = document.createElement('link');
+    link.rel = 'icon';
+    document.head.appendChild(link);
+  }
+  link.href = 'favicon/' + choice;
+}
 })();
