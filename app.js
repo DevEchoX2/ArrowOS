@@ -6,10 +6,10 @@
   // Define your apps here
   const apps = [
     {
-      id: 'music',
-      title: 'Music',
-      icon: 'img/apps/music.png',
-      url: 'apps/music.html'
+      id: 'partner',
+      title: 'partner',
+      icon: 'partnerimg/apps/ubyis.png',
+      url: 'apps/partner.html'
     },
     {
       id: 'gallery',
