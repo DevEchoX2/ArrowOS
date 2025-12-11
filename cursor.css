@@ -1,18 +1,48 @@
-
-
+/* Hide the default cursor */
 body {
-  cursor: crosshair;
+  cursor: none;
 }
 
-
-a, button, .btn, .task-btn {
-  cursor: crosshair;
+/* Custom cursor element */
+#custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  pointer-events: none;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: #ff0055; /* default neon pink */
+  text-shadow: 0 0 6px #ff0055, 0 0 12px #ff0055, 0 0 24px #ff0055;
+  animation: pulse 1.5s infinite;
+  transform: translate(-50%, -50%);
+  transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
-input[type="text"], textarea {
-  cursor: crosshair;
+/* Pulsating glow animation */
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    text-shadow: 0 0 6px #ff0055, 0 0 12px #ff0055, 0 0 24px #ff0055;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    text-shadow: 0 0 12px #ff0055, 0 0 24px #ff0055, 0 0 48px #ff0055;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    text-shadow: 0 0 6px #ff0055, 0 0 12px #ff0055, 0 0 24px #ff0055;
+  }
 }
 
-.window-titlebar {
-  cursor: crosshair;
+/* Hover states: change neon color */
+a:hover ~ #custom-cursor,
+button:hover ~ #custom-cursor,
+.task-btn:hover ~ #custom-cursor {
+  color: #00e5ff; /* neon cyan */
+  text-shadow: 0 0 6px #00e5ff, 0 0 12px #00e5ff, 0 0 24px #00e5ff;
 }
