@@ -107,20 +107,36 @@
 
     <!-- Settings -->
     <section id="window-settings" class="window window-hidden">
-      <header class="window-titlebar">
-        <div class="window-title"><i class="fa-solid fa-gear"></i><span>Settings</span></div>
-        <div class="window-actions">
-          <button class="btn win-min"><i class="fa-regular fa-window-minimize"></i></button>
-          <button class="btn win-max"><i class="fa-regular fa-window-maximize"></i></button>
-          <button class="btn win-close"><i class="fa-regular fa-window-close"></i></button>
-        </div>
-      </header>
-      <div class="window-content settings">
-        <label>Accent color <input type="color" id="accent-picker" value="#7f5af0" /></label>
-        <label>Blur strength <input type="range" id="blur-range" min="0" max="30" value="16" /></label>
-        <label>Use video background <input type="checkbox" id="bg-video-toggle" checked /></label>
-      </div>
-    </section>
+  <header class="window-titlebar">
+    <div class="window-title"><i class="fa-solid fa-gear"></i><span>Settings</span></div>
+    <div class="window-actions">
+      <button class="btn win-min"><i class="fa-regular fa-window-minimize"></i></button>
+      <button class="btn win-max"><i class="fa-regular fa-window-maximize"></i></button>
+      <button class="btn win-close"><i class="fa-regular fa-window-close"></i></button>
+    </div>
+  </header>
+  <div class="window-content settings">
+    <!-- Existing controls -->
+    <label>Accent color <input type="color" id="accent-picker" value="#7f5af0" /></label>
+    <label>Blur strength <input type="range" id="blur-range" min="0" max="30" value="16" /></label>
+    <label>Use video background <input type="checkbox" id="bg-video-toggle" checked /></label>
+
+    <!-- New: Background uploader -->
+    <label>Upload background 
+      <input type="file" id="bg-upload" accept=".jpg,.png,.mp4,.webm" />
+    </label>
+
+    <!-- New: Stealth mode -->
+    <label>Stealth mode (about:blank) 
+      <input type="checkbox" id="stealth-toggle" />
+    </label>
+
+    <!-- New: Favicon switcher -->
+    <label>Favicon 
+      <select id="favicon-select"></select>
+    </label>
+  </div>
+</section>
 
     <!-- Terminal -->
     <section id="window-terminal" class="window window-hidden">
