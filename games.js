@@ -38,8 +38,8 @@
     {
       id: 'snow-rider',
       title: 'Snow Rider 3D',
-      thumb: 'img/games/snow-rider.png',
-      url: 'games/snow-rider.html'
+      thumb: 'img/games/snowrider.png',
+      url: 'games/snowrider.html'
     }
   ];
 
