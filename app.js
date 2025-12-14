@@ -12,10 +12,10 @@
       url: 'apps/partner.html'
     },
     {
-      id: 'gallery',
-      title: 'Gallery',
-      icon: 'img/apps/gallery.png',
-      url: 'apps/gallery.html'
+      id: 'silk',
+      title: 'silk',
+      icon: 'img/apps/silk.png',
+      url: 'apps/silk.html'
     },
     {
       id: 'store',
