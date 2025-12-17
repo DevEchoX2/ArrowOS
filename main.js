@@ -207,14 +207,23 @@
     const close = w.querySelector('.win-close');
     min.addEventListener('click', () => minimizeWindow(w));
     max.addEventListener('click', () => maximizeWindow(w));
-    close.addEventListener('click', () => closeWindow(w));
+    close.addEventListener('click', () => closeWindow(w, name, id));
 
   }
 
 
   window.dragging = false; window.curr = null; window.rect = null; window.startX = 0; window.startY = 0;
 
-  function closeWindow(win) { win.remove(); }
+function closeWindow(win, name, id) { 
+    win.remove(); 
+    const index = windows[name].findIndex(w => w.id === id);
+        
+    if (index !== -1) {
+        windows[name].splice(index, 1); // Remove 1 item at that index
+    }
+
+}
+
   function minimizeWindow(win) { win.classList.add('window-hidden'); }
   function maximizeWindow(win) {
     if (!win) return;
