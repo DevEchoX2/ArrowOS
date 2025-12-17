@@ -59,7 +59,7 @@
         windows[tm.value].forEach((w) => {
           const win = document.getElementById(`window-${w.id}`);
           win.remove();
-        };
+        });
         windows[tm.value] = [];
         tm.value = null;
         tm.menu.style.display = 'none';
