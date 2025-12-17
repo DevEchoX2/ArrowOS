@@ -36,147 +36,19 @@
 
   <!-- Desktop -->
   <main id="desktop">
-        <!-- Browser -->
-    <section id="window-browser" class="window window-hidden">
-      <header class="window-titlebar">
-        <div class="window-title"><i class="fa-solid fa-globe"></i><span>Browser</span></div>
-        <div class="window-actions">
-          <button class="btn win-min"><i class="fa-regular fa-window-minimize"></i></button>
-          <button class="btn win-max"><i class="fa-regular fa-window-maximize"></i></button>
-          <button class="btn win-close"><i class="fa-regular fa-window-close"></i></button>
-        </div>
-      </header>
-      <div class="window-content browser">
-        <div class="tabs">
-          <div class="tab active">
-            <i class="fa-solid fa-globe"></i><span>Home</span>
-            <button class="tab-close"><i class="fa-solid fa-xmark"></i></button>
-          </div>
-          <button class="tab-add"><i class="fa-solid fa-plus"></i></button>
-        </div>
-        <div class="toolbar">
-          <button class="btn nav-back"><i class="fa-solid fa-arrow-left"></i></button>
-          <button class="btn nav-forward"><i class="fa-solid fa-arrow-right"></i></button>
-          <button class="btn nav-reload"><i class="fa-solid fa-rotate-right"></i></button>
-          <div class="urlbar">
-            <i class="fa-solid fa-lock"></i>
-            <input id="browser-url" type="text" placeholder="Search or enter address" />
-          </div>
-        </div>
-        <!-- Status overlay -->
-        <div id="browser-status" class="hidden">
-          <div class="status-card">
-            <div class="status-title">This site can’t be embedded</div>
-            <div class="status-sub">It may block framing. Try opening externally.</div>
-            <button id="browser-open-external" class="btn">Open in new tab</button>
-          </div>
-        </div>
-        <iframe id="browser-view"
-                class="browser-view"
-                src="about:blank"
-                sandbox="allow-forms allow-scripts allow-same-origin"
-                referrerpolicy="no-referrer"></iframe>
-      </div>
-    </section>
 
-    <!-- Games -->
-    <section id="window-games" class="window window-hidden">
-      <header class="window-titlebar">
-        <div class="window-title"><i class="fa-solid fa-gamepad"></i><span>Games</span></div>
-        <div class="window-actions">
-          <button class="btn win-min"><i class="fa-regular fa-window-minimize"></i></button>
-          <button class="btn win-max"><i class="fa-regular fa-window-maximize"></i></button>
-          <button class="btn win-close"><i class="fa-regular fa-window-close"></i></button>
-        </div>
-      </header>
-      <div class="window-content games"><div id="games-grid"></div></div>
-    </section>
 
-    <!-- Apps -->
-    <section id="window-apps" class="window window-hidden">
-      <header class="window-titlebar">
-        <div class="window-title"><i class="fa-solid fa-grid-2"></i><span>Apps</span></div>
-        <div class="window-actions">
-          <button class="btn win-min"><i class="fa-regular fa-window-minimize"></i></button>
-          <button class="btn win-max"><i class="fa-regular fa-window-maximize"></i></button>
-          <button class="btn win-close"><i class="fa-regular fa-window-close"></i></button>
-        </div>
-      </header>
-      <div class="window-content apps"><div id="apps-grid"></div></div>
-    </section>
-
-    <!-- Settings -->
-    <section id="window-settings" class="window window-hidden">
-  <header class="window-titlebar">
-    <div class="window-title"><i class="fa-solid fa-gear"></i><span>Settings</span></div>
-    <div class="window-actions">
-      <button class="btn win-min"><i class="fa-regular fa-window-minimize"></i></button>
-      <button class="btn win-max"><i class="fa-regular fa-window-maximize"></i></button>
-      <button class="btn win-close"><i class="fa-regular fa-window-close"></i></button>
-    </div>
-  </header>
-  <div class="window-content settings">
-    <!-- Existing controls -->
-    <label>Accent color <input type="color" id="accent-picker" value="#7f5af0" /></label>
-    <label>Blur strength <input type="range" id="blur-range" min="0" max="30" value="16" /></label>
-    <label>Use video background <input type="checkbox" id="bg-video-toggle" checked /></label>
-
-    <!-- New: Background uploader -->
-    <label>Upload background 
-      <input type="file" id="bg-upload" accept=".jpg,.png,.mp4,.webm" />
-    </label>
-
-    <!-- New: Stealth mode -->
-    <label>Stealth mode (about:blank) 
-      <input type="checkbox" id="stealth-toggle" />
-    </label>
-
-    <!-- New: Favicon switcher -->
-    <label>Favicon 
-      <select id="favicon-select"></select>
-    </label>
-  </div>
-</section>
-
-    <!-- Terminal -->
-    <section id="window-terminal" class="window window-hidden">
-      <header class="window-titlebar">
-        <div class="window-title"><i class="fa-solid fa-terminal"></i><span>Terminal</span></div>
-        <div class="window-actions">
-          <button class="btn win-min"><i class="fa-regular fa-window-minimize"></i></button>
-          <button class="btn win-max"><i class="fa-regular fa-window-maximize"></i></button>
-          <button class="btn win-close"><i class="fa-regular fa-window-close"></i></button>
-        </div>
-      </header>
-      <div class="window-content terminal">
-        <div id="terminal-output"></div>
-        <div class="terminal-input"><span class="prompt">arrowos $</span><input type="text" id="terminal-input" /></div>
-      </div>
-    </section>
-
-    <!-- Generic iframe window -->
-    <section id="window-iframe" class="window window-hidden">
-      <header class="window-titlebar">
-        <div class="window-title"><i class="fa-solid fa-window-maximize"></i><span id="iframe-title">App</span></div>
-        <div class="window-actions">
-          <button class="btn win-min"><i class="fa-regular fa-window-minimize"></i></button>
-          <button class="btn win-max"><i class="fa-regular fa-window-maximize"></i></button>
-          <button class="btn win-close"><i class="fa-regular fa-window-close"></i></button>
-        </div>
-      </header>
-      <div class="window-content">
-        <iframe id="iframe-view" src="" frameborder="0" style="width:100%;height:100%;"></iframe>
-      </div>
-    </section>
   </main>
+
+
     <!-- Taskbar -->
   <nav id="taskbar">
     <div class="taskbar-inner">
-      <button class="task-btn" data-open="browser"><span class="icon" data-icon="globe"></span></button>
-      <button class="task-btn" data-open="games"><span class="icon" data-icon="gamepad"></span></button>
-      <button class="task-btn" data-open="apps"><span class="icon" data-icon="grid"></span></button>
-      <button class="task-btn" data-open="settings"><span class="icon" data-icon="settings"></span></button>
-      <button class="task-btn" data-open="terminal"><span class="icon" data-icon="terminal"></span></button>
+      <button class="task-btn sp" data-open="browser"><span class="icon" data-icon="globe"></span></button>
+      <button class="task-btn sp" data-open="games"><span class="icon" data-icon="gamepad"></span></button>
+      <button class="task-btn sp" data-open="apps"><span class="icon" data-icon="grid"></span></button>
+      <button class="task-btn sp" data-open="settings"><span class="icon" data-icon="settings"></span></button>
+      <button class="task-btn sp" data-open="terminal"><span class="icon" data-icon="terminal"></span></button>
       <div class="taskbar-right">
         <button class="task-btn" id="show-desktop"><i class="fa-solid fa-layer-group"></i></button>
         <div class="clock" id="clock"></div>
@@ -184,11 +56,22 @@
     </div>
   </nav>
 
+  <div style="z-index: 5030" id="taskbar-menu">
+    <div id="tm-tabs">
+
+    </div>
+    <button class="tm-button" id="tm-newwindow" onclick="tm.new()">New Window</button>
+    <button class="tm-button" id="tm-close" onclick="tm.close()">Close All Windows</button>
+  </div>
+
   <!-- Scripts -->
   <script src="icons.js"></script>
-  <script src="main.js"></script>
+  <script src="taskbar.js"></script>
   <script src="games.js"></script>
-  <script src="app.js"></script>
-  <script src="browser.js"></script>
+  <script src="main.js"></script>
+  <!--
+    <script src="app.js"></script>
+    <script src="browser.js"></script>
+  -->
 </body>
 </html>
